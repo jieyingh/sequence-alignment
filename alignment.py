@@ -8,9 +8,8 @@ def alignement(seq1, seq2, scoreGap, scoreMatch, scoreMismatch):
     matrice = firstScore(matrice,numCol, numRow, scoreGap)
     matrice = calcScore(matrice, numRow, numCol, scoreGap, scoreMatch, scoreMismatch, rowSeq, colSeq)
     chemin = backtrack(numRow, numCol)
-    visAlignement(chemin)
-    print(chemin)
-    score(matrice, numRow, numCol)
+    (alignedSeq1, indicator, alignedSeq2) = visAlignement(chemin)
+    score(matrice, numRow, numCol, alignedSeq1, indicator, alignedSeq2)
 
 
 # cree le dataframe
@@ -73,16 +72,31 @@ def pathTrack(current, previous, type):
         "type": type}
     paths.append(dict)
 
-
-# extrait le score final de la matrice
-def score(matrice, numRow, numCol):
-    print(matrice)
-    print("Score de l'alignement: ", matrice.iat[(numRow - 1),(numCol - 1)])
-    
-
 # donne l'alignement
 def visAlignement(chemin):
-    pass
+    chemin = chemin[::-1]
+    alignedSeq1 = ""
+    indicator = ""
+    alignedSeq2 = ""
+    for dict in chemin:
+        match dict.get("type"):
+            case "match":
+                alignedSeq1 += seq1[(dict.get("current"))[0] - 1]
+                alignedSeq2 += seq2[(dict.get("current"))[1] - 1]
+                indicator += "|"
+            case "mismatch":
+                alignedSeq1 += seq1[(dict.get("current"))[0] - 1]
+                alignedSeq2 += seq2[(dict.get("current"))[1] - 1]
+                indicator += ":"
+            case "gapSeq1":
+                alignedSeq1 += "-"
+                alignedSeq2 += seq2[(dict.get("current"))[1] - 1]
+                indicator += " "
+            case "gapSeq2":
+                alignedSeq1 += seq1[(dict.get("current"))[0] - 1]
+                alignedSeq2 += "-"
+                indicator += " "               
+    return (alignedSeq1, indicator, alignedSeq2)
 
 def backtrack(numRow, numCol):
     chemin = []
@@ -104,6 +118,13 @@ def backtrack(numRow, numCol):
 
     return chemin
 
+# extrait le score final de la matrice
+def score(matrice, numRow, numCol, alignedSeq1, indicator, alignedSeq2):
+    print(matrice)
+    print("Score de l'alignement: ", matrice.iat[(numRow - 1),(numCol - 1)])
+    print(alignedSeq1)
+    print(indicator)
+    print(alignedSeq2)
 # ================= display ==========================
 seq1 = input(" Entrez la premiere sequence: ")
 seq2 = input(" Entrez la deuxieme sequence: ")
