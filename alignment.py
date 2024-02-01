@@ -120,7 +120,7 @@ def backtrack(numRow, numCol):
 
 # extrait le score final de la matrice
 def score(matrice, numRow, numCol, alignedSeq1, indicator, alignedSeq2):
-    print(matrice)
+    # print(matrice)
     print("Score de l'alignement: ", matrice.iat[(numRow - 1),(numCol - 1)])
     print(alignedSeq1)
     print(indicator)
